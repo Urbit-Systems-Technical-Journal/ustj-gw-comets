@@ -1,53 +1,3 @@
-\documentclass[twoside]{article}
-
-\usepackage{ustj}
-
-\addbibresource{mss.bib}
-
-\newcommand{\authorname}{Trent Steen}
-\newcommand{\authorpatp}{\patp{hanfel-dovned}}
-\newcommand{\affiliation}{Groundwire Foundation}
-
-%  Make first page footer:
-\fancypagestyle{firststyle}{%
-\fancyhf{}% Clear header/footer
-\fancyhead{}
-\fancyfoot[L]{{\footnotesize
-              %% We toggle between these:
-              Manuscript submitted for review.\\
-              % {\it Urbit Systems Technical Journal} I:1 (2024):  1–3. \\
-              ~ \\
-              Address author correspondence to \authorpatp.
-              }}
-}
-%  Arrange subsequent pages:
-\fancyhf{}
-\fancyhead[LE]{{\urbitfont Urbit Systems Technical Journal}}
-\fancyhead[RO]{Floating-Point Arithmetic on Deterministic Systems}
-\fancyfoot[LE,RO]{\thepage}
-
-%%MANUSCRIPT
-\title{Groundwire Comet Cryptography}
-\author{\authorname~\authorpatp \\ \affiliation}
-\date{}
-
-\begin{document}
-
-\maketitle
-\thispagestyle{firststyle}
-
-\begin{abstract}
-\emph{Adapted from \textsc{uip}-XXX.}
-\end{abstract}
-
-% We will adjust page numbering in final editing.
-\pagenumbering{arabic}
-\setcounter{page}{1}
-
-\tableofcontents
-
-\section{Introduction}
-
 Groundwire allows comets to rotate their networking keys. How does this
 work precisely?
 
@@ -433,8 +383,3 @@ https://github.com/orgs/gwbtc/discussions/12
 write-up, so keep in mind if this ever gets adapted for public
 consumption that I probably stole \textasciitilde tinnus's phrasing in a
 couple places, and certainly wrote this on the back of his work.}
-\tombstone
-
-\selectlanguage{USenglish}
-% \printbibliography
-\end{document}
