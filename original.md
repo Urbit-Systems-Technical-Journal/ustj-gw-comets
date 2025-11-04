@@ -1,8 +1,42 @@
-Groundwire allows comets to rotate their networking keys. How does this work precisely?
+*Adapted from UIP-XXXX.*
+
+This article presents three coordinated changes to comet identity and networking on Urbit: (1) Ames may query Jael for a comet’s current life and networking keys instead of requiring comet self-attestation; (2) introduction of a cryptosuite (“Suite C”) with tweaked signing keys encoded by `++cric`, binding keys to explicit provenance data while preserving Suite B compatibility; and (3) optional fief-based routing, allowing comets to route directly by static IP or domain and lifting the assumption that sponsor chains must terminate at galaxies. Collectively, comet identity becomes cryptographically coupled to the chosen PKI substrate while remaining substrate-agnostic at the protocol level.
+
+# Introduction
+
+Urbit currently derives comet identity from self-attested networking keys whose public half hashes into the comet’s `@p`. In practice, this creates an implicit coupling between a comet’s keys and whichever source of truth a peer happens to trust at first contact.
+
+Groundwire’s proposal is deliberately modest and pragmatic. Over the long term, we believe Bitcoin is the only chain that defines canonical history at the protocol level (the heaviest valid proof-of-work chain) in a way that a Kelvin 0 Urbit could verify without social coordination or trusted checkpoints. This makes Bitcoin an attractive long-term anchor for the Urbit PKI. At the same time, it is premature to elevate that belief to kernel policy or to bless a single on-chain abstraction (e.g., ordinals/inscriptions) in perpetuity. Different chains—and even different protocols on the same chain—offer distinct data and scripting affordances for identity; we should let those options be explored in the field.
+
+Accordingly, we propose a substrate-agnostic mechanism whereby:
+
+- Ames first consults Jael for comet keys and only falls back to comet self-attestation if Jael lacks a record.  
+- Networking keys may be *tweaked* using explicit provenance data, so the key material itself cryptographically commits to the on-chain (or off-chain) attestation it corresponds to.  
+- Comets may advertise routing information (a `+$fief`) so packets can route directly without assuming a sponsorship hierarchy that must terminate at galaxies.
+
+This leaves the memorable-name hierarchy (galaxies, stars, planets) on Azimuth untouched while upgrading the vast expanse of ephemeral identities for self-sovereign networking. Practically, Jael continues to subscribe to sources (via `%listen`) chosen by the operator; the kernel does not enshrine a single source of truth.
+
+## Design overview
+
+There are three concrete kernel changes:
+
+**1) Jael-first comet keys.**  
+Ames replaces `++request-attestation` with `++fetch-comet-pki`, which asks Jael for the comet’s latest life and corresponding keys. If a record exists, Ames validates messages against it; otherwise, it may fall back to self-attestation. The authoritative store remains Jael’s map from life to `[crypto-suite=@ud =pass]` in `+$point:jael`.
+
+**2) Suite C tweaked keys.**  
+We extend Suite B (`++crub`) to Suite C (`++cric`), which preserves Suite B and adds a case with tweaked signing keys. The untweaked signing public key and tweak data are included so any peer can reconstruct the tweaked key and verify it matches what the comet uses. In practice, current Groundwire comets commit to their ordinal (indexed satoshi) and the canonical validating agent name; this prevents a wide class of replay and spoofing attacks and enables bidirectional provenance between on-chain and off-chain attestations.
+
+**3) Fief-based routing.**  
+We add an optional `+$fief` field to comet entries in Jael defining a static IP/port or domain. Ames should attempt fief-based routing before sponsor-chain routing. It must not assume sponsor-chain termination at galaxies and must detect cycles.
+
+---
+
+The remainder of this article recaps elliptic-curve context and the current asymmetric cryptosuite interface used by Ames, then details the tweaked-key construction and routing implications. A prototype exists in Groundwire’s forks of `urbit/urbit` and `urbit/vere` implementing `++fetch-comet-pki`, `++cric`, and `+$fief`.
 
 # Elliptic Curves
 
 > "Each Urbit ship possesses two networking keypairs: one for encryption, and one for authentication. We often refer to these two keypairs as though they were a single keypair because they are stored as a single atom. Elliptic Curve Diffie-Hellman is used for encryption, while Elliptic Curve Digital Signature Algorithm is used for authentication."
+[Citation: https://docs.urbit.org/urbit-os/kernel/ames/cryptography]
 
 An **elliptic curve** is a two-dimensional curve defined by the general form `y^2 = x^3 + ax + b` with the special condition that `4a^3 + 27b^2 != 0`. As long as that special condition holds true for whatever constants you picked for a and b, you can define a special type of addition for pairs of points on this curve where you draw a line between them, find the singular third point on the curve that this line hits, and then flip that third point across the x axis. Multiplication means doing this process repeatedly.
 
@@ -224,13 +258,6 @@ The final implication of Groundwire's change to Ames' interpretation of comet pr
 
 On top of this, Ames has been updated to allow any ship to be a valid sponsor, necessitating a few changes to its routing logic to detect cycles and ensure that sponsorship chains are allowed to terminate in any sponsor with a `$fief`, rather than only in galaxies.
 
-## Sources
-> https://en.wikipedia.org/wiki/Curve25519
-> https://docs.urbit.org/urbit-os/kernel/arvo/cryptography
-> [https://docs.urbit.org/urbit-os/kernel/ames/cryptography#comets%23](https://docs.urbit.org/urbit-os/kernel/ames/cryptography#comets#)
-> https://docs.urbit.org/hoon/cryptography#ed
-> https://www.youtube.com/watch?v=NF1pwjL9-DE
-> https://docs.google.com/document/d/1GbrxMvFeL51_Q0ieXyXeN21ylrlBkOzeF1eo9iw5Yak/edit?tab=t.nzlzmcdsxd5#heading=h.jmr099yfrej5
-> https://github.com/orgs/gwbtc/discussions/12
+## Acknowledgements
 
-*I didn't do a very good job of tagging specific citations in this write-up, so keep in mind if this ever gets adapted for public consumption that I probably stole ~tinnus's phrasing in a couple places, and certainly wrote this on the back of his work.*
+The author would like to thank ~tinnus-napbus and ~bonbud-macryg for help documenting the original Groundwire codebase, and ~tondes-sitrym and ~sarpen-laplux for developing it.
