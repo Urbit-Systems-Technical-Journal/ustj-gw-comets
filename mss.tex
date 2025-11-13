@@ -48,7 +48,7 @@ This article presents three coordinated changes to comet identity and networking
 \noindent \sloppy
 Collectively, comet identity becomes cryptographically coupled to the chosen \textsc{pki} substrate while remaining substrate-agnostic at the protocol level.
 
-\emph{Adapted from \textsc{uip}-XXX.}\footnote{The author would like to thank \patp{tinnus-napbus} and \patp{bonbud-macryg} for help documenting the original Groundwire codebase, and \patp{tondes-sitrym} and \patp{sarpen-laplux} for developing it.}
+\emph{Adapted from \textsc{uip}-0136.}\footnote{The author would like to thank \patp{tinnus-napbus} and \patp{bonbud-macryg} for help documenting the original Groundwire codebase, and \patp{tondes-sitrym} and \patp{sarpen-laplux} for developing it.}
 \end{abstract}
 
 % We will adjust page numbering in final editing.
@@ -85,7 +85,7 @@ There are three concrete kernel changes entailed by the Groundwire proposal:
 
 \item \textbf{Fief-based routing.}  We add an optional \lstinline[style=inlinecode]{$fief} field to comet entries in Jael defining a static IP/port or domain. Ames should attempt fief-based routing before sponsor-chain routing. It must not assume sponsor-chain termination at galaxies and must detect cycles.
 
-The remainder of this article recaps elliptic-curve context and the current asymmetric cryptosuite interface used by Ames, then details the tweaked-key construction and routing implications. A prototype exists in Groundwire’s forks of \lstinline[style=inlinecode]{urbit/urbit} and \lstinline[style=inlinecode]{urbit/vere} implementing \lstinline[style=inlinecode]{+fetch-comet-pki}, \lstinline[style=inlinecode]{+cric}, and \lstinline[style=inlinecode]{$fief}.
+The remainder of this article recaps elliptic-curve context and the current asymmetric cryptosuite interface used by Ames, then details the tweaked-key construction and routing implications. A prototype exists in Groundwire’s forks of \lstinline[style=inlinecode]{urbit/urbit}, \lstinline[style=inlinecode]{urbit/vere}, and \lstinline[style=inlinecode]{urbit/urcrypt} implementing \lstinline[style=inlinecode]{+fetch-comet-pki}, \lstinline[style=inlinecode]{+cric}, and \lstinline[style=inlinecode]{$fief}.
 
 \section{Elliptic Curves}\label{elliptic-curves}
 
@@ -216,7 +216,7 @@ to---so we store this in the Jael secrets vane right next to the keys themselves
 
 Now we can begin to home in on exactly what needs to change in the Urbit crypto suite in order for Groundwire to allow comets to rotate their keys.
 
-In current Arvo, when a comet contacts another ship, that ship will ask the comet for an \emph{unecrypted self-attestation packet} to prove that the sender does in fact control the private key whose public counterpart was hashed into the comet's \lstinline[style=inlinecode]{@p}:
+In current Arvo, when a comet contacts another ship, that ship will ask the comet for an \emph{unencrypted self-attestation packet} to prove that the sender does in fact control the private key whose public counterpart was hashed into the comet's \lstinline[style=inlinecode]{@p}:
 
 \begin{lstlisting}[style=listingblock]
 ::  +request-attestation: helper to request
@@ -295,7 +295,7 @@ $%  $:  suite=%b
 \end{lstlisting}
 
 \noindent
-We refer to \lstinline[style=inlinecode]{+crub} as ``Suite B'' because it implements the \textsc{nsa} Suite B Cryptography Standard. \lstinline[style=inlinecode]{+cryc} includes everything in Suite B, along with a new ``Suite C'' (a coinage of our own).
+We refer to \lstinline[style=inlinecode]{+crub} as ``Suite B'' because it implements the \textsc{nsa} Suite B Cryptography Standard. \lstinline[style=inlinecode]{+cric} includes everything in Suite B, along with a new ``Suite C'' (a coinage of our own).
 
 The Suite C payload's main difference is that the signing keys are ``tweaked''. We store \lstinline[style=inlinecode]{ugn}, the untweaked public key, and \lstinline[style=inlinecode]{sed}, the random seed used to originally generate our untweaked keypair, so that we have everything we need to recreate them if we ever need to. Then, we can tweak them by passing them into a tweaking function along with a bytestring, \lstinline[style=inlinecode]{dat} (omitting from our tweak the additional new field \lstinline[style=inlinecode]{xtr} which can include extra data):
 
