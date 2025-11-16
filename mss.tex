@@ -264,9 +264,6 @@ $%  $:  suite=%b
 ==  ==
 \end{lstlisting}
 
-\noindent
-We refer to \lstinline[style=inlinecode]{+crub} as ``Suite B'' because it implements the \textsc{nsa} Suite B Cryptography Standard. \lstinline[style=inlinecode]{+cric} includes everything in Suite B, along with a new ``Suite C'' (a coinage of our own).
-
 \begin{lstlisting}[style=listingcode,caption={The current Arvo comet handler.},label={lst:arvo}, float={!p}]
 ::  +request-attestation: helper to request
 ::  attestation from comet. Also sets a timer
@@ -331,6 +328,9 @@ We refer to \lstinline[style=inlinecode]{+crub} as ``Suite B'' because it implem
 \end{lstlisting}
 
 \newpage
+\noindent
+We refer to \lstinline[style=inlinecode]{+crub} as ``Suite B'' because it implements the \textsc{nsa} Suite B Cryptography Standard. \lstinline[style=inlinecode]{+cric} includes everything in Suite B, along with a new ``Suite C'' (a coinage of our own).
+
 The Suite C payload's main difference is that the signing keys are ``tweaked''. We store \lstinline[style=inlinecode]{ugn}, the untweaked public key, and \lstinline[style=inlinecode]{sed}, the random seed used to originally generate our untweaked keypair, so that we have everything we need to recreate them if we ever need to. Then, we can tweak them by passing them into a tweaking function along with a bytestring, \lstinline[style=inlinecode]{dat} (omitting from our tweak the additional new field \lstinline[style=inlinecode]{xtr} which can include extra data):
 
 \begin{lstlisting}[style=listingblock]
@@ -353,7 +353,7 @@ First, the public key is hashed along with the data to produce \lstinline[style=
 \end{lstlisting}
 
 \noindent
-And these two arms, \lstinline[style=inlinecode]{+scap} and \lstinline[style=inlinecode]{+scas}, simply perform elliptic curve addition between the tweak scalar and the corresponding key!
+These two arms, \lstinline[style=inlinecode]{+scap} and \lstinline[style=inlinecode]{+scas}, perform elliptic curve addition between the tweak scalar and corresponding key.
 
 Anyone with both your public untweaked key and your tweak data can
 recreate your tweaked key. And, sure enough, we recall the
