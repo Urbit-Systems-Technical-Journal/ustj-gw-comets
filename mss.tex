@@ -86,7 +86,7 @@ There are three concrete kernel changes entailed by the Groundwire proposal:
 \item \textbf{Fief-based routing.}  We add an optional \lstinline[style=inlinecode]{$fief} field to comet entries in Jael defining a static IP/port or domain. Ames should attempt fief-based routing before sponsor-chain routing. It must not assume sponsor-chain termination at galaxies and must detect cycles.
 \end{enumerate}
 
-The remainder of this article recaps elliptic-curve context and the current asymmetric cryptosuite interface used by Ames, then details the tweaked-key construction and routing implications. A prototype exists in Groundwire’s forks of \lstinline[style=inlinecode]{urbit/urbit} and \lstinline[style=inlinecode]{urbit/vere} implementing \lstinline[style=inlinecode]{+fetch-comet-pki}, \lstinline[style=inlinecode]{+cric}, and \lstinline[style=inlinecode]{$fief}.
+The remainder of this article recaps elliptic-curve context and the current asymmetric cryptosuite interface used by Ames, then details the tweaked-key construction and routing implications. A prototype exists in Groundwire’s forks of \lstinline[style=inlinecode]{urbit/urbit}, \lstinline[style=inlinecode]{urbit/vere}, and \lstinline[style=inlinecode]{urbit/urcrypt} implementing \lstinline[style=inlinecode]{+fetch-comet-pki}, \lstinline[style=inlinecode]{+cric}, and \lstinline[style=inlinecode]{$fief}.
 
 \section{Elliptic Curves}\label{elliptic-curves}
 
@@ -264,7 +264,7 @@ $%  $:  suite=%b
 \end{lstlisting}
 
 \noindent
-We refer to \lstinline[style=inlinecode]{+crub} as ``Suite B'' because it implements the \textsc{nsa} Suite B Cryptography Standard. \lstinline[style=inlinecode]{+cryc} includes everything in Suite B, along with a new ``Suite C'' (a coinage of our own).
+We refer to \lstinline[style=inlinecode]{+crub} as ``Suite B'' because it implements the \textsc{nsa} Suite B Cryptography Standard. \lstinline[style=inlinecode]{+cric} includes everything in Suite B, along with a new ``Suite C'' (a coinage of our own).
 
 \begin{lstlisting}[style=listingcode,caption={The current Arvo comet handler.},label={lst:arvo}, float={!p}]
 ::  +request-attestation: helper to request
