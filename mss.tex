@@ -219,7 +219,8 @@ to---so we store this in the Jael secrets vane right next to the keys themselves
 
 Now we can begin to home in on exactly what needs to change in the Urbit crypto suite in order for Groundwire to allow comets to rotate their keys.
 
-In current Arvo (Listing~\ref{lst:arvo}), when a comet contacts another ship, that ship will ask the comet for an \emph{unecrypted self-attestation packet} to prove that the sender does in fact control the private key whose public counterpart was hashed into the comet's \lstinline[style=inlinecode]{@p}.
+\sloppy
+In current Arvo (Listing~\ref{lst:arvo}), when a comet contacts another ship, that ship will ask the comet for an \emph{unecrypted self-attest\-ation packet} to prove that the sender does in fact control the private key whose public counterpart was hashed into the comet's \lstinline[style=inlinecode]{@p}.
 
 But Groundwire comets don't self-attest to their identity; that
 attestation comes into Jael via \lstinline[style=inlinecode]{%ord-watcher} in the same way that
