@@ -16,8 +16,8 @@
 \fancyhead{}
 \fancyfoot[L]{{\footnotesize
               %% We toggle between these:
-              Manuscript submitted for review.\\
-              % {\it Urbit Systems Technical Journal} I:1 (2024):  1–3. \\
+              % Manuscript submitted for review.\\
+              {\it Urbit Systems Technical Journal} III:1 (2026):  69–82. \\
               ~ \\
               Address author correspondence to \authorpatp.
               }}
@@ -43,7 +43,7 @@ This article presents three coordinated changes to comet identity and networking
 \begin{enumerate}
 \item  Ames may query Jael for a comet’s current life and networking keys instead of requiring comet self-attestation;
 \item  Introduction of a cryptosuite with tweaked signing keys, binding keys to explicit provenance data while preserving Suite B compatibility; and
-\item  Optional fief-based routing, allowing comets to route directly by static IP or domain and lifting the assumption that sponsor chains must terminate at galaxies.
+\item  \sloppy Optional fief-based routing, allowing comets to route directly by static IP or domain and lifting the assumption that sponsor chains must terminate at galaxies.
 \end{enumerate}
 \noindent \sloppy
 Collectively, comet identity becomes cryptographically coupled to the chosen \textsc{pki} substrate while remaining substrate-agnostic at the protocol level.
@@ -53,7 +53,7 @@ Collectively, comet identity becomes cryptographically coupled to the chosen \te
 
 % We will adjust page numbering in final editing.
 \pagenumbering{arabic}
-\setcounter{page}{1}
+\setcounter{page}{69}
 
 \tableofcontents
 
@@ -61,7 +61,8 @@ Collectively, comet identity becomes cryptographically coupled to the chosen \te
 
 Urbit currently derives comet identity from self-attested networking keys whose public half hashes into the comet’s \lstinline[style=inlinecode]{@p}. In practice, this creates an implicit coupling between a comet’s keys and whichever source of truth a peer happens to trust at first contact.
 
-Groundwire’s proposal is deliberately modest and pragmatic. Over the long term, we believe Bitcoin is the only chain that defines canonical history at the protocol level (the heaviest valid proof-of-work chain) in a way that a zero-kelvin Urbit could verify without social coordination or trusted checkpoints. This makes Bitcoin an attractive long-term anchor for the Urbit \textsc{pki}. At the same time, it is premature to elevate that belief to kernel policy or to bless a single on-chain abstraction (e.g., ordinals/inscriptions) in perpetuity. Different chains—and even different protocols on the same chain—offer distinct data and scripting affordances for identity; we should let those options be explored in the field.
+\sloppy
+Groundwire’s proposal is deliberately modest and pragmatic. Over the long term, we believe Bitcoin is the only chain that defines canonical history at the protocol level (the heaviest valid proof-of-work chain) in a way that a zero-kelvin \mbox{Urbit} could verify without social coordination or trusted checkpoints. This makes Bitcoin an attractive long-term anchor for the Urbit \textsc{pki}. At the same time, it is premature to elevate that belief to kernel policy or to bless a single on-chain abstraction (e.g., ordinals/inscriptions) in perpetuity. Different chains—and even different protocols on the same chain—offer distinct data and scripting affordances for identity; we should let those options be explored in the field.
 
 Accordingly, we propose a substrate-agnostic mechanism whereby:
 
@@ -76,6 +77,7 @@ This leaves the memorable-name hierarchy (galaxies, stars, planets) on Azimuth u
 
 \section{Design Overview}
 
+\sloppy
 There are three concrete kernel changes entailed by the Groundwire proposal:
 
 \begin{enumerate}
@@ -153,9 +155,9 @@ special condition holds true for whatever constants you picked for $a$ and $b$, 
 
 What is the benefit of this? Its irreversibility. A private key is just a number; a public key is just that number multiplied by some other commonly agreed on number (the "base point") using elliptic curve arithmetic. Regular multiplication would mean that one could trivially obtain someone's private key by dividing their public key by the base point, but by bouncing all our operations around with elliptic curve multiplication, we prevent division.  This is less crude and more beautiful than it might seem, because these keypairs have some special properties that are useful for cryptography.
 
-If Alice multiplies her private key by Bob's public key, \mbox{Alice} gets the same answer as if Bob multiplied his private key by Alice's public key. This allows the two parties to use that answer as a shared secret that only they know. In the \emph{Elliptic Curve Diffie-Hellman (}\ssc{ecdh}\emph{)} protocol, we take the $x$ coordinate of that shared secret and run it through a key derivation function (in Urbit's case, \textsc{sha}-256) to get a symmetric key which allows them to both encrypt and decrypt messages. Using this key, they can communicate privately.
+If Alice multiplies her private key by Bob's public key, \mbox{Alice} gets the same answer as if Bob multiplied his private key by Alice's public key. This allows the two parties to use that answer as a shared secret that only they know. In the \emph{Elliptic Curve Diffie-Hellman} (\ssc{ecdh}) protocol, we take the $x$ coordinate of that shared secret and run it through a key derivation function (in Urbit's case, \textsc{sha}-256) to get a symmetric key which allows them to both encrypt and decrypt messages. Using this key, they can communicate privately.
 
-Similarly, \emph{Elliptic Curve Digital Signature Algorithm (}\ssc{ecdsa}\emph{)} uses a more extensive algorithm to allow Alice to sign a message with her private key and for Bob to use his public key to verify that Alice did in fact sign it.
+Similarly, \emph{Elliptic Curve Digital Signature Algorithm} (\ssc{ecdsa}) uses a more extensive algorithm to allow Alice to sign a message with her private key and for Bob to use his public key to verify that Alice did in fact sign it.
 
 The elliptic curve that Urbit uses for key generation is the fast and
 un-patented \emph{Curve25519}. This specifies the curve equation, the base point, and the finite field (the range of integers that we operate on, wrapping back to 0 if we go over the max value). There are two algebraically equivalent representations of Curve25519 that Urbit uses, with each defining its own set of standard operations: Montgomery Form (X25519), which is more efficient for \textsc{ecdh}, and Twisted Edwards Form (Ed25519), which is more efficient for \textsc{eddsa} (an elliptic curve signature scheme similar to \textsc{ecdsa}).
