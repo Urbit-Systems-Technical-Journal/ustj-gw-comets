@@ -193,7 +193,7 @@ The usage of public and private keys we've described so far is called
   \item  \lstinline[style=inlinecode]{+seal}: encrypt to a peer. Runs \textsc{ecdh} with our encode secret plus their encode pubkey, hashes with \textsc{sha}-256, signs with our auth secret, encrypts with \textsc{aes}-\textsc{siv}.
   \item  \lstinline[style=inlinecode]{+sign}: sign a message with our auth secret (\textsc{eddsa}).
   \item  \lstinline[style=inlinecode]{+sure}: verify a message was signed with the matching auth pubkey.
-  \item  \lstinline[style=inlinecode]{+tear}: decrypt from a peer. \textsc{ecdh} with our enc secret plus their enc pubkey, \textsc{sha}-256, \textsc{aes}-\textsc{siv} decrypt, then verify signature.
+  \item  \lstinline[style=inlinecode]{+tear}: decrypt from a peer. \textsc{ecdh} with our encrypt secret plus their encrypt pubkey, \textsc{sha}-256, \textsc{aes}-\textsc{siv} decrypt, then verify signature.
   \item  \lstinline[style=inlinecode]{+fig}: \textsc{sha}-256 fingerprint of the public key(s).
   \item  \lstinline[style=inlinecode]{+pac}: \textsc{sha}-256 fingerprint of the secret key(s).
   \item  \lstinline[style=inlinecode]{+pub}: concatenate encode pubkey plus auth pubkey into one atom.
@@ -247,7 +247,7 @@ All of Groundwire's changes to Arvo stem from modifying Ames's
 The payload of \lstinline[style=inlinecode]{+crub} is:
 
 \begin{lstlisting}[style=listingblock]
-[pub=[cry=@ sgn=@]\ sek=(unit [cry=@ sgn=@])]
+[pub=[cry=@ sgn=@] sek=(unit [cry=@ sgn=@])]
 \end{lstlisting}
 
 \noindent
